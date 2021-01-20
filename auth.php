@@ -40,10 +40,10 @@
             "mgs" => "授权失败"   
         ];
         
-        return json_encode($response);
+        echo json_encode($response);
         exit;
   }
 
-  return json_encode($response);
-
+  echo json_encode($response);
+  
 ?>
