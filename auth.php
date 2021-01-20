@@ -22,15 +22,24 @@
             $num = '1998';
             $username = 'liusheng';
             $expire = time()+86400*7;//token值保存时间
-            $token = sha1($num.$username.mt_rand(1,999999).time());
+            $sha1_str = sha1($num.$username.mt_rand(1,999999).time());
+            $token = substr($sha1_str,10,20);
             
+            //删除原有记录
+            $sql3 = "delete from p_token where uid = {$date['u_id']}"; //根据用户id删除原有记录
+            $pdo->exec($sql3);
+           
+            //生成新数据
             $uid = $date['u_id'];//数据库里的用户id
             $sql2 = "insert into p_token (uid,token,expire) values ('$uid','$token','$expire')";//添加的sql语句
             $res2 = $pdo->query($sql2);//执行sql
             if($res2 != " "){
                 $response = [
                     "errno" => "0",
-                    "mgs" => "授权成功"   
+                    "mgs" => "授权成功",
+                    "data" => [
+                        'token' => $token
+                    ]   
                 ];
             }
       }
@@ -45,5 +54,5 @@
   }
 
   echo json_encode($response);
-  
+
 ?>
